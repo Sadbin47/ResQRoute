@@ -1,0 +1,643 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ResQRoute main screen, laid out like a map app rather than a dashboard:
+
+    - the map is the whole screen, edge to edge;
+    - one floating pill at the top carries the app name and offline state;
+    - everything else lives in a bottom sheet: a peek line with the current
+      route/selection, contextual actions when a road is selected, and the
+      technical detail (road data, device, peer sync, activity) once swiped up.
+
+  Runtime view ids referenced by MainActivity: rq_root, rq_top_stack, rq_top_bar,
+  rq_zoom_controls, btnZoomIn, btnZoomOut, mapContainer,
+  mapPlaceholder, statusText, markActions, markPrompt, waterLevelActions, passabilityActions,
+  btnSubmitReport, btnCancel, btnReportHere, locationSuggestionText,
+  locationConfirmActions, btnConfirmLocation, btnDeclineLocation, submitRow,
+  datasetText, diagnosticsText, btnPermissions, syncStatusText, btnStartSync,
+  btnStopSync, authContainer, debugContainer, logText, rq_sheet_content.
+
+  The debug-only hooks are not declared here: they are added in code behind
+  `if (BuildConfig.DEBUG)` so a release build ships none of their strings.
+-->
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rq_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/rq_scrim"
+    tools:context=".app.MainActivity">
+
+    <!-- ============================== map ============================== -->
+    <FrameLayout
+        android:id="@+id/mapContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/mapPlaceholder"
+            android:tag="map-placeholder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/rq_map_placeholder"
+            style="@style/Text.ResQRoute.Body" />
+    </FrameLayout>
+
+    <!-- ======================= floating top bar ======================== -->
+    <!--
+      The top bar and the zoom controls share one vertical stack so the controls are
+      positioned *relative to the pill* rather than at a guessed offset that would drift
+      whenever the status-bar inset changed. The stack carries the gravity and the top
+      margin; the pill keeps its own gutter margins so it still reads as a floating pill.
+    -->
+    <LinearLayout
+        android:id="@+id/rq_top_stack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/rq_top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/rq_gutter"
+            android:layout_marginEnd="@dimen/rq_gutter"
+            android:background="@drawable/rq_pill_surface"
+            android:elevation="6dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingTop="12dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="12dp">
+
+            <View
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:background="@drawable/rq_offline_dot" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:text="@string/app_name"
+                style="@style/Text.ResQRoute.AppName" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rq_offline_chip"
+                style="@style/Text.ResQRoute.Chip" />
+        </LinearLayout>
+
+        <!--
+          Map zoom controls (XPH-91). Right-aligned under the offline chip.
+
+          They exist because the map has no tile downloader and therefore no built-in
+          zoom widget, and because a pinch is not always available: one hand while
+          walking, wet gloves, or a person who does not know the gesture. Zoom is not
+          cosmetic here - it decides whether the road you are about to report is
+          selectable at all (the long-press hit test is in screen space, and at the
+          default zoom the district centre returns "Ambiguous: N roads overlap").
+
+          Hidden until the map is attached: a zoom button that does nothing is worse
+          than no button. MainActivity shows them when the adapter exists, and they
+          respect the map's own 6..20 zoom clamp, so they cannot zoom past the range
+          the no-downloader tile provider supports.
+        -->
+        <LinearLayout
+            android:id="@+id/rq_zoom_controls"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="@dimen/rq_top_stack_gap"
+            android:layout_marginEnd="@dimen/rq_gutter"
+            android:background="@drawable/rq_map_control_bg"
+            android:elevation="6dp"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <ImageButton
+                android:id="@+id/btnZoomIn"
+                android:layout_width="@dimen/rq_map_control_size"
+                android:layout_height="@dimen/rq_map_control_size"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/rq_zoom_in"
+                android:padding="12dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/rq_ic_zoom_in"
+                app:tint="@color/rq_text_primary" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="9dp"
+                android:layout_marginEnd="9dp"
+                android:background="@drawable/rq_map_control_divider" />
+
+            <ImageButton
+                android:id="@+id/btnZoomOut"
+                android:layout_width="@dimen/rq_map_control_size"
+                android:layout_height="@dimen/rq_map_control_size"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/rq_zoom_out"
+                android:padding="12dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/rq_ic_zoom_out"
+                app:tint="@color/rq_text_primary" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- =========================== bottom sheet ======================== -->
+    <LinearLayout
+        android:id="@+id/rq_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rq_sheet_bg"
+        android:elevation="12dp"
+        android:orientation="vertical"
+        android:paddingTop="8dp"
+        app:behavior_fitToContents="true"
+        app:behavior_peekHeight="@dimen/rq_sheet_peek"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <LinearLayout
+            android:id="@+id/rq_sheet_peek"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="vertical"
+            android:paddingBottom="4dp">
+
+            <View
+                android:layout_width="32dp"
+                android:layout_height="4dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/rq_drag_handle" />
+
+        <!-- peek: what the app is doing right now -->
+        <TextView
+            android:id="@+id/statusText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/rq_sheet_padding"
+            android:layout_marginTop="14dp"
+            android:layout_marginEnd="@dimen/rq_sheet_padding"
+            android:text="@string/map_selection_hint"
+            style="@style/Text.ResQRoute.Status"
+            tools:text="Route: 235 nodes · 38900 m · revision 0" />
+
+        <!-- contextual actions, only while a road is selected -->
+        <!--
+              Location-assisted entry (XPH-90). Optional by design: the long-press path is unchanged,
+              and every failure of this button ends in a sentence pointing back to it.
+            -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnReportHere"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="@dimen/rq_sheet_padding"
+            android:text="@string/rq_report_here"
+            style="@style/Widget.ResQRoute.Button.Tonal" />
+
+        <LinearLayout
+            android:id="@+id/markActions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/rq_sheet_padding"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="@dimen/rq_sheet_padding"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <!-- ===================== header (title, subtitle, offline badge) ===================== -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/markPrompt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/Text.ResQRoute.SheetTitle"
+                        tools:text="Report S013052" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/rq_report_subtitle"
+                        style="@style/Text.ResQRoute.SheetSubtitle" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/rq_badge_bg"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="4dp">
+
+                    <ImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/rq_ic_wifi_off"
+                        app:tint="@color/rq_label_secondary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:text="@string/rq_offline_chip"
+                        style="@style/Text.ResQRoute.OfflineBadge" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!--
+              The two category grids, generated from the enums by WaterReportPicker so every category
+              is offered by construction rather than by a list somebody maintains. They scroll: the
+              panel is a fixed height so the sheet is usable on a small handset, and a taller grid
+              must never push a category out of reach.
+            -->
+            <!--
+              An explicit height, not "0dp + weight". With weight the list was squeezed by the panel's
+              fixed height instead of scrolling, and the last row of depth cards was clipped 74px short
+              with its label out of the card - measured on a device. A ScrollView with a height of its
+              own always scrolls when its content is taller, which is what makes every category
+              reachable on a small handset.
+            -->
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/reportChoicesScroll"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/rq_report_choices_height"
+                android:layout_marginTop="12dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingBottom="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/rq_report_category_depth"
+                        style="@style/Text.ResQRoute.CategoryLabel" />
+
+                    <!--
+                      The grids are filled by WaterReportPicker with weighted rows: depth gets rows of
+                      two, passability gets a row of three then a row of two. Weighted rows rather than
+                      a GridLayout because the staggered passability shape mixes spans, and GridLayout's
+                      auto-placement packs mixed spans unpredictably - measured, not assumed: five
+                      cards came out [290, 290, 290, 291, 589] instead of [450, 450, 300, 300, 300].
+                    -->
+                    <LinearLayout
+                        android:id="@+id/waterLevelGrid"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="vertical" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/rq_report_category_passability"
+                        style="@style/Text.ResQRoute.CategoryLabel" />
+
+                    <LinearLayout
+                        android:id="@+id/passabilityGrid"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="vertical" />
+
+                    <TextView
+                        android:id="@+id/locationSuggestionText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:visibility="gone"
+                        style="@style/Text.ResQRoute.Mono"
+                        tools:text="Nearest road S022958 — about 12 m away" />
+
+                    <LinearLayout
+                        android:id="@+id/locationConfirmActions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnConfirmLocation"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/rq_report_here_confirm"
+                            style="@style/Widget.ResQRoute.Button.Mark" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnDeclineLocation"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            android:text="@string/rq_report_here_decline"
+                            style="@style/Widget.ResQRoute.Button.Mark" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+
+            <!-- ===================== action bar, anchored below the grids ===================== -->
+            <LinearLayout
+                android:id="@+id/submitRow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSubmitReport"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="7"
+                    android:enabled="false"
+                    android:text="@string/rq_report_choose_level"
+                    style="@style/Widget.ResQRoute.Button.ReportPrimary" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCancel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="3"
+                    android:text="@string/rq_report_cancel"
+                    style="@style/Widget.ResQRoute.Button.ReportCancel" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/rq_report_footer"
+                style="@style/Text.ResQRoute.SheetFooter" />
+        </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/rq_sheet_padding"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="@dimen/rq_sheet_padding"
+                android:text="@string/rq_sheet_hint"
+                style="@style/Text.ResQRoute.Caption" />
+        </LinearLayout>
+
+        <!-- swipe up: the technical detail -->
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/rq_sheet_content"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:fillViewport="false"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="@dimen/rq_sheet_padding"
+                android:paddingTop="18dp"
+                android:paddingEnd="@dimen/rq_sheet_padding"
+                android:paddingBottom="24dp">
+
+                <!-- peer sync -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/rq_section_sync"
+                    style="@style/Text.ResQRoute.Section" />
+
+                <TextView
+                    android:id="@+id/syncStatusText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="@string/rq_sync_stopped"
+                    style="@style/Text.ResQRoute.Mono"
+                    tools:text="Peer sync: RQR-1a2b3c4d: compatible=true synced=true pending=0" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnStartSync"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/rq_start_sync"
+                        style="@style/Widget.ResQRoute.Button.SyncStart" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnStopSync"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:text="@string/rq_stop_sync"
+                        style="@style/Widget.ResQRoute.Button.SyncStop" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/sync_disclaimer"
+                    style="@style/Text.ResQRoute.Caption" />
+
+                <!-- route explanation (XPH-77): comparison, reported roads, unknown coverage -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/rq_route_section"
+                    style="@style/Text.ResQRoute.Section" />
+
+                <!-- The map key (XPH-92): a third mark needs a name. -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="@string/rq_map_legend"
+                    style="@style/Text.ResQRoute.Caption" />
+
+                <TextView
+                    android:id="@+id/routeCompareText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    style="@style/Text.ResQRoute.Mono"
+                    tools:text="Lower-reported-risk route: 7,562 m longer (36,052 m total)." />
+
+                <TextView
+                    android:id="@+id/routeUnknownText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    style="@style/Text.ResQRoute.Mono"
+                    tools:text="No reports for 9,120 m of this 36,052 m route." />
+
+                <TextView
+                    android:id="@+id/routeAvoidText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    style="@style/Text.ResQRoute.Mono"
+                    tools:text="Reported on this route: 2" />
+
+                <!--
+                  Reported history (XPH-71) for the road the person has selected: what was reported,
+                  when, by whom, and the one trend sentence the log supports. Hidden until a road is
+                  selected. This is where a report that prices risk but closes nothing becomes visible
+                  - the overlay draws only exclusions, and this block is the honest way to show the
+                  rest without inventing a map mark that could be mistaken for a closure.
+                -->
+                <LinearLayout
+                    android:id="@+id/historySection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/rq_section_history"
+                        style="@style/Text.ResQRoute.Section" />
+
+                    <TextView
+                        android:id="@+id/historyText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        style="@style/Text.ResQRoute.Mono"
+                        tools:text="Road S022959&#10;reports from 2 distinct device IDs&#10;1 from this device · 1 relayed&#10;14:10 daylight · ankle-deep · caution — this device · reported 6 h ago&#10;19:40 night · knee-deep · caution — another device · reported 1 h ago&#10;Reported over time: ankle-deep 14:10 → knee-deep 19:40 (rising)." />
+
+                    <TextView
+                        android:id="@+id/historyNoteText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        style="@style/Text.ResQRoute.Caption"
+                        tools:text="Reported history — not a prediction, and not proof the road is usable now. Times are Asia/Dhaka local (UTC+06:00), the road's timezone." />
+                </LinearLayout>
+
+                <!-- road data -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/rq_section_road_data"
+                    style="@style/Text.ResQRoute.Section" />                <TextView
+                    android:id="@+id/datasetText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="@string/rq_dataset_waiting"
+                    style="@style/Text.ResQRoute.Mono"
+                    tools:text="Dataset: READY — cold load 503 ms&#10;sha256   : b9af7a2e3d433517… (format v1)&#10;graph    : 34826 nodes · 78166 directed edges · 39923 segments&#10;shelters : 91" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/map_offline_note"
+                    style="@style/Text.ResQRoute.Caption" />
+
+                <!-- device -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/rq_section_device"
+                    style="@style/Text.ResQRoute.Section" />
+
+                <TextView
+                    android:id="@+id/diagnosticsText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="@string/rq_diagnostics_waiting"
+                    style="@style/Text.ResQRoute.Mono"
+                    tools:text="device: samsung SC-51C | Android 16 (API 36)&#10;app: 1.0.0&#10;Bluetooth radio: on | Wi-Fi radio: off&#10;Permissions: all granted" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnPermissions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/rq_recheck_permissions"
+                    style="@style/Widget.ResQRoute.Button.Tonal" />
+
+                <LinearLayout
+                    android:id="@+id/authContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <!-- debug hooks are inserted here in code, debug builds only -->
+                <LinearLayout
+                    android:id="@+id/debugContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone" />
+
+                <!-- activity -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/rq_section_activity"
+                    style="@style/Text.ResQRoute.Section" />
+
+                <TextView
+                    android:id="@+id/logText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    style="@style/Text.ResQRoute.Log"
+                    tools:text="21:04:02  Map ready: 91 shelters · no network&#10;21:04:10  Nearby sync started (foreground only)" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

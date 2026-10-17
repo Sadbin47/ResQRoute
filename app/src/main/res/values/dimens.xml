@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="rq_gutter">16dp</dimen>
+    <dimen name="rq_sheet_radius">20dp</dimen>
+    <!--
+      Grown from 148dp by one compact row for the "report where I am" button (XPH-90). Measured on a
+      480x800 device rather than guessed, because the last phase's picker looked right in isolation and
+      was clipped in the sheet.
+    -->
+    <dimen name="rq_sheet_peek">196dp</dimen>
+    <!--
+      Taller than the single action row it replaced (240dp): the report picker needs a prompt, two
+      rows of categories and a submit row, and at 240dp its lower rows were clipped off the bottom of
+      the screen - found on a 480x800 device, not in a unit test. 352dp is measured from that device:
+      the picker's block is ~353px and the sheet's header ~129px at density 1.5, so 528px of sheet
+      (352dp) shows all of it while still leaving the top of the map - and the red mark the person is
+      judging - visible. A smaller-screen handset would need either the grid layout or the two-step
+      flow that ADR 0015 records as the alternative. -->
+    <dimen name="rq_sheet_peek_action">352dp</dimen>
+    <dimen name="rq_sheet_padding">20dp</dimen>
+    <dimen name="rq_pill_radius">28dp</dimen>
+    <dimen name="rq_button_radius">24dp</dimen>
+    <dimen name="rq_button_height">48dp</dimen>
+
+    <dimen name="rq_text_title">18sp</dimen>
+    <dimen name="rq_text_chip">11sp</dimen>
+    <dimen name="rq_text_chip_plus">12sp</dimen>
+    <dimen name="rq_text_section">13sp</dimen>
+    <dimen name="rq_text_status">17sp</dimen>
+    <dimen name="rq_text_body">14sp</dimen>
+    <dimen name="rq_text_caption">12sp</dimen>
+    <dimen name="rq_text_mono">12sp</dimen>
+    <dimen name="rq_text_log">11sp</dimen>
+    <dimen name="rq_report_choice_gap">2dp</dimen>
+    <!--
+      Report sheet (XPH-93): rounded cards on a grid.
+    -->
+    <dimen name="rq_card_radius">18dp</dimen>
+    <!--
+      Card height, and the height of every grid row. Sized so a card holds a 26dp icon, a label of up
+      to two lines at 12sp and 10dp of padding without clipping - a longer label grows the card in a
+      taller font scale only if the panel is rebuilt with a taller dimen, which is deliberate: an
+      explicit height is what keeps the grid even, and 88dp leaves room for two lines at the default
+      scale.
+    -->
+    <dimen name="rq_card_min_height">88dp</dimen>
+    <dimen name="rq_grid_gap">10dp</dimen>
+    <dimen name="rq_choice_icon">26dp</dimen>
+    <dimen name="rq_choice_badge">20dp</dimen>
+    <!--
+      The reporting panel's height. The sheet is nearly full-screen on a small handset and about a
+      third of the display on a modern one, because the panel is a fixed height while `peekHeight` is
+      capped by the screen. Inside the panel the option grids scroll, so every category stays
+      reachable whatever the display size.
+    -->
+    <!-- Height of the scrollable choices list inside the report panel. -->
+    <dimen name="rq_report_choices_height">248dp</dimen>
+    <!--
+      The sheet's peek while a road is selected: header row, the choices list, the action bar and the
+      footer. Taller than the old action peek because the report panel is a grid now, and it is the
+      whole panel that has to be visible - the list inside it is what scrolls.
+    -->
+    <dimen name="rq_sheet_peek_report">560dp</dimen>
+
+    <!--
+      Floor for a picker choice. Every choice in a row stretches to the tallest label, so this is
+      the minimum rather than a cap: three lines of 11sp text fit comfortably, and a larger font
+      scale grows the row instead of clipping the category.
+    -->
+    <dimen name="rq_report_choice_height">52dp</dimen>
+
+    <!--
+      Floating map controls (zoom).
+
+      44dp square: comfortably above the 40dp that map apps use and still a full
+      touch target on a 480x800 phone, without covering the map the way a large
+      button would. The icon is 20dp inside it, so the glyph does not touch the
+      stroke.
+    -->
+    <dimen name="rq_map_control_size">44dp</dimen>
+    <dimen name="rq_map_control_icon">20dp</dimen>
+    <dimen name="rq_map_control_radius">10dp</dimen>
+    <!-- Gap between the floating pill and the control below it. -->
+    <dimen name="rq_top_stack_gap">8dp</dimen>
+</resources>

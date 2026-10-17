@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ResQRoute</string>
+    <string name="offline_shell_title">ResQRoute</string>
+    <string name="offline_shell_note">Offline map — no INTERNET permission. Dataset, roads and shelters all come from the bundled file.</string>
+    <string name="offline_map_ready">Offline map ready (placeholder shell)</string>
+    <string name="map_selection_hint">Tap a shelter to route to it · long-press a road to report flooding</string>
+    <string name="map_offline_note">No tile downloader · data connection disabled · INTERNET permission removed</string>
+    <string name="hazard_restoring">Restoring saved road reports…</string>
+    <string name="sync_disclaimer">Foreground only. Both phones must show the same code before accepting. Reports are sent only after they are committed locally, and replay on reconnect.</string>
+
+    <!-- Top bar -->
+    <string name="rq_offline_chip">Offline</string>
+
+    <!--
+      Floating map controls. "Zoom in" / "Zoom out" are the platform's own names for these
+      actions, which is what a screen reader expects; they carry no claim about the map.
+    -->
+    <string name="rq_zoom_in">Zoom in</string>
+    <string name="rq_zoom_out">Zoom out</string>
+
+    <!-- Map -->
+    <string name="rq_map_placeholder">Loading offline map…</string>
+
+    <!-- Contextual actions: exact button text used by the runbook/script. -->
+
+    <!--
+      The report picker (XPH-70). Labels are CATEGORIES, never centimetres: the app has no sensor and
+      no calibration, so no depth may be implied to be measured. "Can't tell" stores no depth claim
+      and never excludes a road by itself.
+    -->
+    <string name="rq_report_prompt">Report %1$s — what did you see?</string>
+    <!-- Report sheet header (XPH-93): the title names the road, the subtitle asks the question. -->
+    <string name="rq_report_title">Report %1$s</string>
+    <string name="rq_report_subtitle">What did you see?</string>
+    <string name="rq_report_category_depth">Water depth</string>
+    <string name="rq_report_category_passability">Road passability</string>
+    <string name="rq_report_footer">Swipe up for offline sync &amp; details</string>
+    <!-- The action label names both choices, so nobody submits a report they did not mean. -->
+    <string name="rq_report_submit_selected">Report: %1$s • %2$s</string>
+    <string name="rq_report_choose_level">Choose a water level</string>
+    <string name="rq_report_choose_passability">Now say if it can be used</string>
+    <string name="rq_report_incomplete">That combination says nothing — change one</string>
+    <string name="rq_report_submit">Report %1$s · %2$s</string>
+    <string name="rq_report_chosen">%1$s (chosen)</string>
+    <string name="rq_report_cancel">Cancel</string>
+
+    <!--
+      Location-assisted reporting (XPH-90). GPS identifies a ROAD, never a depth: no water level is
+      inferred from a position, and the confirmation always precedes any write. A doubtful snap is
+      described as doubtful rather than presented as the answer, and every failure falls back to the
+      long-press path in words.
+    -->
+    <string name="rq_report_here">Report where I am</string>
+    <string name="rq_report_here_candidate">Nearest road %1$s — about %2$s m away</string>
+    <string name="rq_report_here_accuracy">your location is reported good to about %1$s m</string>
+    <string name="rq_report_here_concern_far">farther than usual — check this is the road you are on</string>
+    <string name="rq_report_here_concern_ambiguous">another road is just as close — check which one</string>
+    <string name="rq_report_here_concern_accuracy">your location is imprecise — check this is the road you are on</string>
+    <string name="rq_report_here_confirm">This road</string>
+    <string name="rq_report_here_decline">Not this road</string>
+    <string name="rq_report_here_denied">Location is not allowed — long-press the road instead.</string>
+    <string name="rq_report_here_no_fix">No location reading yet — long-press the road instead.</string>
+    <string name="rq_report_here_failed">Location is unavailable — long-press the road instead.</string>
+    <string name="rq_report_here_no_road">No road near your location — long-press the road instead.</string>
+
+    <!--
+      A clearance is an explicit report that a road can be used (ADR 0005 §5). It is labelled as what it
+      is - "cleared" is the vocabulary ADR 0005 approves - and never as verified, safe or confirmed: it is
+      an unverified claim with provenance, exactly like every other report.
+    -->
+    <string name="rq_report_cleared">cleared</string>
+
+    <!-- Sheet sections (sentence case, like Maps' detail rows) -->
+    <string name="rq_section_road_data">Road data</string>
+    <string name="rq_section_device">Device</string>
+    <string name="rq_section_sync">Peer sync</string>
+    <string name="rq_section_activity">Activity</string>
+    <string name="rq_sheet_hint">Swipe up for data, device and sync details</string>
+
+    <string name="rq_recheck_permissions">Re-check permissions</string>
+    <string name="rq_start_sync">Start nearby sync</string>
+    <string name="rq_stop_sync">Stop nearby sync</string>
+    <string name="rq_sync_stopped">Peer sync: stopped</string>
+    <string name="rq_dataset_waiting">Dataset: waiting for the loader…</string>
+    <string name="rq_diagnostics_waiting">Reading device state…</string>
+
+    <!--
+      Road-report support. The count is of DEVICE IDs: never people, never a percentage,
+      never "confidence", never "verified". A device id is not a person, and two reports
+      from one phone are one device. See ADR 0001 D5 and
+      docs/decisions/0008-support-source-typing-and-disagreement.md
+    -->
+    <plurals name="rq_support_devices">
+        <item quantity="one">report from %1$d distinct device ID</item>
+        <item quantity="other">reports from %1$d distinct device IDs</item>
+    </plurals>
+    <string name="rq_support_attribution_direct">%1$d from this device</string>
+    <string name="rq_support_attribution_relayed">%1$d relayed</string>
+    <string name="rq_support_attribution_official">%1$d official</string>
+
+    <!-- Disagreement: both views are shown, neither is averaged or discarded. -->
+    <string name="rq_disagreement_header">Reports on this road differ</string>
+    <string name="rq_disagreement_entry">%1$s — %2$s</string>
+    <string name="rq_unreadable_report">reported, but this version cannot read the details</string>
+
+    <!-- Water level, as an ordinal label. Never a measurement, never centimetres. -->
+    <string name="rq_water_none">no water seen</string>
+    <string name="rq_water_ankle">ankle-deep</string>
+    <string name="rq_water_knee">knee-deep</string>
+    <string name="rq_water_waist">waist-deep</string>
+    <string name="rq_water_above_waist">above waist</string>
+    <string name="rq_water_unknown">depth not estimated</string>
+
+    <!-- Passability: the single traversal decision. -->
+    <string name="rq_pass_passable">passable</string>
+    <string name="rq_pass_caution">caution</string>
+    <string name="rq_pass_avoid">avoid</string>
+    <string name="rq_pass_impassable">impassable</string>
+    <string name="rq_pass_unknown">passability not judged</string>
+
+    <!-- Who told us. Provenance, never a claim that the report is correct. -->
+    <string name="rq_reporter_this_device">this device</string>
+    <string name="rq_reporter_another_device">another device</string>
+    <string name="rq_reporter_official">an official source</string>
+
+    <!--
+      Route explanation. Nothing here describes a route as safe, clear, verified or confirmed:
+      a route with no reports is UNREPORTED, not clear, and the unknown-coverage line says how
+      much of it nobody has looked at. Support is a count of device IDs, never people and never a
+      probability. Coverage is stated as a length of a total rather than a percentage, to keep the
+      wording gate absolute. See ADR 0013 and docs/decisions/0013-route-explanation-and-unknown-coverage.md
+    -->
+    <string name="rq_route_section">Routes</string>
+    <!--
+      The map key (XPH-92). Added because the map now has a third mark: a road somebody reported that
+      is still usable. Without it, amber is a colour with no explanation, and the person cannot tell
+      it apart from the red exclusion - which is the distinction ADR 0001 D1 turns on.
+    -->
+    <string name="rq_map_legend">Map key: red = reported impassable · amber = reported with water, still usable · green = your route</string>
+    <string name="rq_route_line">Route: %1$s m</string>
+    <string name="rq_route_nothing_reported">No reported roads on either route.</string>
+    <string name="rq_route_same">Shortest and lower-reported-risk routes are the same road.</string>
+    <string name="rq_route_same_length">A lower-reported-risk alternative was found, with the same distance.</string>
+    <string name="rq_route_longer">Lower-reported-risk route: %1$s m longer (%2$s m total).</string>
+    <string name="rq_route_reported_header">Reported on the %1$s m route: %2$d</string>
+    <string name="rq_route_reported_entry">Road %1$s · %2$s · %3$s · %4$s</string>
+    <string name="rq_route_entry_unstated">reported</string>
+    <string name="rq_route_age_just_now">reported just now</string>
+    <string name="rq_route_age_seconds">reported %1$d s ago</string>
+    <string name="rq_route_age_minutes">reported %1$d min ago</string>
+    <string name="rq_route_age_hours">reported %1$d h ago</string>
+    <string name="rq_route_age_days">reported %1$d d ago</string>
+    <string name="rq_route_age_unknown">reported, age unknown</string>
+    <string name="rq_route_age_unverified">reported, time not verified</string>
+    <string name="rq_route_unknown">No reports for %1$s m of this %2$s m route.</string>
+    <string name="rq_route_mostly_unknown">Most of this route has no reports.</string>
+    <string name="rq_route_no_alternative">No lower-reported-risk alternative exists, and this route crosses reported flooding.</string>
+    <string name="rq_route_all_cross">Every route offered crosses reported flooding.</string>
+    <plurals name="rq_route_avoids">
+        <item quantity="one">It avoids %1$d reported road.</item>
+        <item quantity="other">It avoids %1$d reported roads.</item>
+    </plurals>
+    <plurals name="rq_route_crosses">
+        <item quantity="one">This route crosses %1$d reported road.</item>
+        <item quantity="other">This route crosses %1$d reported roads.</item>
+    </plurals>
+    <plurals name="rq_route_support">
+        <item quantity="one">%1$d device ID</item>
+        <item quantity="other">%1$d device IDs</item>
+    </plurals>
+
+    <!--
+      Reported history (XPH-71). A road's reports in the order they claim to have happened, plus the
+      one sentence the log supports about how the reported depth changed. Times are the reporters'
+      CLAIMED observation times, rendered in the road's timezone; the band (daylight/night) is context
+      for reading a time and nothing else - no line relates the time of day to the water. The trend
+      word describes the REPORTS and is never a prediction, and nothing here says or implies that the
+      road is usable now. Support is a count of device IDs, never people (ADR 0001 D5).
+    -->
+    <string name="rq_section_history">Reported history</string>
+    <string name="rq_history_road">Road %1$s</string>
+    <string name="rq_history_entry">%1$s · %2$s — %3$s · %4$s</string>
+    <string name="rq_history_time">%1$s %2$s</string>
+    <string name="rq_history_time_unverified">time not verified</string>
+    <string name="rq_history_band_daylight">daylight</string>
+    <string name="rq_history_band_night">night</string>
+    <string name="rq_history_none">No reports on this road.</string>
+    <string name="rq_history_one">One report so far — not enough history for a trend.</string>
+    <string name="rq_history_not_comparable">Not enough comparable reports for a trend.</string>
+    <string name="rq_history_trend_change">Reported over time: %1$s %2$s → %3$s %4$s (%5$s).</string>
+    <string name="rq_history_trend_rising">rising</string>
+    <string name="rq_history_trend_falling">falling</string>
+    <string name="rq_history_trend_steady">same depth reported both times</string>
+    <string name="rq_history_note">Reported history — not a prediction, and not proof the road is usable now.</string>
+    <string name="rq_history_zone">Times are %1$s local (%2$s), the road\'s timezone.</string>
+</resources>

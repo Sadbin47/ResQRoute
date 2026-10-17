@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Palette modelled on Google Maps' dark theme: near-black chrome, soft grey
+  surfaces, one blue accent, and semantic green/red/amber reserved for state.
+
+  Deliberately no neon: the map is the colourful thing on screen, the UI stays
+  quiet around it.
+-->
+<resources>
+    <!-- Chrome -->
+    <color name="rq_surface">#202124</color>
+    <color name="rq_surface_variant">#303134</color>
+    <color name="rq_surface_raised">#292A2D</color>
+    <color name="rq_divider">#3C4043</color>
+    <color name="rq_scrim">#0B0F14</color>
+
+    <!-- Accent (Google blue) -->
+    <color name="rq_blue">#8AB4F8</color>
+    <color name="rq_blue_fill">#1A73E8</color>
+    <color name="rq_blue_pressed">#1765CC</color>
+    <color name="rq_on_blue">#FFFFFF</color>
+    <color name="rq_white">#FFFFFF</color>
+
+    <!-- Peer-sync toggle: start is green, stop turns red only while sync runs,
+         and both sit grey when idle. -->
+    <color name="rq_sync_green">#188038</color>
+    <color name="rq_button_grey">#3C4043</color>
+
+    <!-- Text -->
+    <color name="rq_text_primary">#E8EAED</color>
+    <color name="rq_text_secondary">#9AA0A6</color>
+    <color name="rq_text_muted">#80868B</color>
+
+    <!-- State (matches the map overlays) -->
+    <color name="rq_route_green">#81C995</color>
+    <color name="rq_blocked_red">#F28B82</color>
+    <color name="rq_pending_amber">#FDD663</color>
+    <color name="rq_blocked_fill">#EA4335</color>
+    <color name="rq_flood_fill">#F9AB00</color>
+
+    <!--
+      Report-picker choices. The chosen one is a filled accent chip so the selection is
+      unmistakable; the rest sit flat on the surface. Replaces an opacity-only change that was
+      reported from a device as "pressing does nothing".
+    -->
+    <color name="rq_choice_fill">#2A2B2E</color>
+    <color name="rq_choice_fill_selected">#1A73E8</color>
+    <color name="rq_choice_text">#9AA0A6</color>
+    <color name="rq_choice_text_selected">#FFFFFF</color>
+
+    <!--
+      Report sheet (XPH-93). A dedicated palette for the reporting panel, laid out as the brief
+      asked: an off-black background, one elevated card surface with a hairline border, one accent,
+      and three semantic colours that only ever mean passability.
+
+      The semantic three are deliberately NOT the same tokens as the map overlays: on the map, amber
+      means "reported and still usable" (a road), while here amber means "caution" (a verdict). They
+      are different claims about different things and are allowed to differ.
+    -->
+    <color name="rq_panel_bg">#1A1B1E</color>
+    <color name="rq_card_surface">#2C2D30</color>
+    <color name="rq_card_border">#3F4045</color>
+    <color name="rq_accent">#1A73E8</color>
+    <color name="rq_label_secondary">#A0A0A0</color>
+    <color name="rq_semantic_passable">#34A853</color>
+    <color name="rq_semantic_caution">#FBBC04</color>
+    <color name="rq_semantic_avoid">#EA4335</color>
+    <color name="rq_icon_water">#8AB4F8</color>
+    <color name="rq_icon_neutral">#A0A0A0</color>
+
+    <!--
+      Floating map controls (zoom). Translucent by design: they sit over the map, so
+      the map stays visible through them. The stroke is what keeps a near-black
+      control legible when the map beneath it is also near-black - over deep water,
+      forest or the dark no-tile background.
+    -->
+    <color name="rq_map_control_scrim">#B3202124</color>
+    <color name="rq_map_control_stroke">#4D3C4043</color>
+</resources>

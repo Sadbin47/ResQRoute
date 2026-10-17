@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A hairline between the two zoom controls, so they read as one unit without
+     a second border that would double up against the container's stroke. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/rq_map_control_stroke" />
+</shape>

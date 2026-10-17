@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Avoid: a hazard diamond, struck through. Advises against, and - unlike a barricade - does not
+     claim the road is unusable, which is exactly the distinction between AVOID and IMPASSABLE. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp"
+    android:viewportWidth="24" android:viewportHeight="24">
+    <path android:pathData="M12,3.2 L20.8,12 L12,20.8 L3.2,12 Z"
+        android:strokeColor="#FFFFFFFF" android:strokeWidth="1.7" android:strokeLineJoin="round"
+        android:fillColor="#00000000" />
+    <path android:pathData="M8.3,15.7 L15.7,8.3"
+        android:strokeColor="#FFFFFFFF" android:strokeWidth="1.9" android:strokeLineCap="round"
+        android:fillColor="#00000000" />
+</vector>

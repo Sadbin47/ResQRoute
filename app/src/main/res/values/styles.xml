@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Type and widget styles, kept close to Material defaults so the app reads like a
+  normal Maps-style product rather than a custom dashboard.
+
+  Section labels are sentence case in muted grey (Google Maps has no all-caps
+  headers), and buttons are full pills: one filled blue action, the rest quiet.
+-->
+<resources>
+    <style name="Text.ResQRoute.AppName" parent="">
+        <item name="android:textSize">@dimen/rq_text_title</item>
+        <item name="android:textColor">@color/rq_text_primary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Text.ResQRoute.Chip" parent="">
+        <item name="android:textSize">@dimen/rq_text_chip</item>
+        <item name="android:textColor">@color/rq_text_secondary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.04</item>
+    </style>
+
+    <style name="Text.ResQRoute.Section" parent="">
+        <item name="android:textSize">@dimen/rq_text_section</item>
+        <item name="android:textColor">@color/rq_text_secondary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Text.ResQRoute.Status" parent="">
+        <item name="android:textSize">@dimen/rq_text_status</item>
+        <item name="android:textColor">@color/rq_text_primary</item>
+        <item name="android:lineSpacingExtra">2dp</item>
+    </style>
+
+    <style name="Text.ResQRoute.Body" parent="">
+        <item name="android:textSize">@dimen/rq_text_body</item>
+        <item name="android:textColor">@color/rq_text_secondary</item>
+        <item name="android:lineSpacingExtra">2dp</item>
+    </style>
+
+    <!-- Report sheet header (XPH-93). -->
+    <style name="Text.ResQRoute.SheetTitle" parent="">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/rq_white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="Text.ResQRoute.SheetSubtitle" parent="">
+        <item name="android:textSize">@dimen/rq_text_body</item>
+        <item name="android:textColor">@color/rq_label_secondary</item>
+    </style>
+
+    <!-- "WATER DEPTH" / "ROAD PASSABILITY": small, all-caps, tracked. -->
+    <style name="Text.ResQRoute.CategoryLabel" parent="">
+        <item name="android:textSize">11sp</item>
+        <item name="android:textColor">@color/rq_label_secondary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.14</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="Text.ResQRoute.OfflineBadge" parent="">
+        <item name="android:textSize">@dimen/rq_text_chip</item>
+        <item name="android:textColor">@color/rq_label_secondary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Text.ResQRoute.SheetFooter" parent="">
+        <item name="android:textSize">@dimen/rq_text_chip</item>
+        <item name="android:textColor">@color/rq_label_secondary</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="Text.ResQRoute.Caption" parent="">
+        <item name="android:textSize">@dimen/rq_text_caption</item>
+        <item name="android:textColor">@color/rq_text_muted</item>
+        <item name="android:lineSpacingExtra">2dp</item>
+    </style>
+
+    <style name="Text.ResQRoute.Mono" parent="">
+        <item name="android:textSize">@dimen/rq_text_mono</item>
+        <item name="android:textColor">@color/rq_text_secondary</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:lineSpacingExtra">3dp</item>
+    </style>
+
+    <style name="Text.ResQRoute.Log" parent="">
+        <item name="android:textSize">@dimen/rq_text_log</item>
+        <item name="android:textColor">@color/rq_text_muted</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:lineSpacingExtra">4dp</item>
+    </style>
+
+    <style name="Widget.ResQRoute.Button" parent="Widget.Material3.Button">
+        <item name="android:textSize">@dimen/rq_text_body</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:minHeight">@dimen/rq_button_height</item>
+        <item name="cornerRadius">@dimen/rq_button_radius</item>
+    </style>
+
+    <style name="Widget.ResQRoute.Button.Primary" parent="Widget.ResQRoute.Button">
+        <item name="backgroundTint">@color/rq_blue_fill</item>
+        <item name="android:textColor">@color/rq_on_blue</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Widget.ResQRoute.Button.Flood" parent="Widget.ResQRoute.Button.Row">
+        <item name="backgroundTint">@color/rq_flood_fill</item>
+        <item name="android:textColor">#3A2A00</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Widget.ResQRoute.Button.Blocked" parent="Widget.ResQRoute.Button.Row">
+        <item name="backgroundTint">@color/rq_blocked_fill</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!--
+      Row buttons (sync pair, mark trio). They share the same metrics so the two
+      sync buttons are exactly equal, and they never wrap: the label shrinks with
+      the screen instead (see MainActivity.applyResponsiveButtonText) and is
+      ellipsised only as a last resort.
+    -->
+    <style name="Widget.ResQRoute.Button.Row" parent="Widget.Material3.Button">
+        <item name="android:textSize">@dimen/rq_text_chip_plus</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:minHeight">@dimen/rq_button_height</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:paddingLeft">4dp</item>
+        <item name="android:paddingRight">4dp</item>
+        <item name="cornerRadius">@dimen/rq_button_radius</item>
+    </style>
+
+    <style name="Widget.ResQRoute.Button.SyncStart" parent="Widget.ResQRoute.Button.Row">
+        <item name="backgroundTint">@color/rq_sync_green</item>
+        <item name="android:textColor">@color/rq_white</item>
+    </style>
+
+    <style name="Widget.ResQRoute.Button.SyncStop" parent="Widget.ResQRoute.Button.Row">
+        <item name="backgroundTint">@color/rq_button_grey</item>
+        <item name="android:textColor">@color/rq_text_secondary</item>
+    </style>
+
+    <style name="Widget.ResQRoute.Button.Mark" parent="Widget.ResQRoute.Button.Row">
+        <item name="backgroundTint">@color/rq_surface_variant</item>
+        <item name="android:textColor">@color/rq_text_primary</item>
+    </style>
+
+    <!--
+      Report sheet actions (XPH-93). The primary is the one that commits a report, so it is the only
+      filled accent button in the panel; Cancel sits beside it on the card surface with an outline.
+    -->
+    <style name="Widget.ResQRoute.Button.ReportPrimary" parent="Widget.Material3.Button">
+        <item name="android:textSize">@dimen/rq_text_body</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:minHeight">@dimen/rq_button_height</item>
+        <item name="cornerRadius">@dimen/rq_pill_radius</item>
+        <item name="backgroundTint">@color/rq_accent</item>
+        <item name="android:textColor">@color/rq_white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="Widget.ResQRoute.Button.ReportCancel" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:textSize">@dimen/rq_text_body</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:minHeight">@dimen/rq_button_height</item>
+        <item name="cornerRadius">@dimen/rq_pill_radius</item>
+        <item name="backgroundTint">@color/rq_card_surface</item>
+        <item name="strokeColor">@color/rq_card_border</item>
+        <item name="android:textColor">@color/rq_white</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="Widget.ResQRoute.Button.Tonal" parent="Widget.Material3.Button.TonalButton">
+        <item name="android:textSize">@dimen/rq_text_body</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:minHeight">@dimen/rq_button_height</item>
+        <item name="cornerRadius">@dimen/rq_button_radius</item>
+    </style>
+</resources>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The container behind the map's zoom controls.
+
+  Deliberately translucent rather than solid: it floats over the map, so the map
+  should stay readable through it while the icon keeps enough contrast to be seen.
+  The stroke is what keeps a dark control legible where the map underneath is also
+  dark - without it the button dissolves into flood water or forest.
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/rq_map_control_scrim" />
+    <corners android:radius="@dimen/rq_map_control_radius" />
+    <stroke
+        android:width="1dp"
+        android:color="@color/rq_map_control_stroke" />
+</shape>

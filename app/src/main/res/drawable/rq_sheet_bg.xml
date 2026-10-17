@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Bottom sheet surface: rounded top corners, no border (Apple/Google Maps). -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/rq_surface" />
+    <corners
+        android:topLeftRadius="@dimen/rq_sheet_radius"
+        android:topRightRadius="@dimen/rq_sheet_radius" />
+</shape>

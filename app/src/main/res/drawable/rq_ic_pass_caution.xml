@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Caution: a warning triangle, outlined so the exclamation inside stays visible. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp"
+    android:viewportWidth="24" android:viewportHeight="24">
+    <path android:pathData="M12,4.2 L20.6,19.2 H3.4 Z"
+        android:strokeColor="#FFFFFFFF" android:strokeWidth="1.7" android:strokeLineJoin="round"
+        android:fillColor="#00000000" />
+    <path android:pathData="M11.15,9.2 H12.85 V14.1 H11.15 Z M11.15,15.5 H12.85 V17.2 H11.15 Z"
+        android:fillColor="#FFFFFFFF" />
+</vector>

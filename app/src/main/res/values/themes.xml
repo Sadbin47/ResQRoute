@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      Dark chrome, matching the map and the Google Maps dark theme. Forcing dark
+      also makes the Android Studio Design tab match the phone.
+    -->
+    <style name="Theme.ResQRoute" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/rq_blue</item>
+        <item name="colorOnPrimary">@color/rq_on_blue</item>
+        <item name="colorPrimaryContainer">@color/rq_blue_fill</item>
+        <item name="colorOnPrimaryContainer">@color/rq_on_blue</item>
+        <item name="colorSecondary">@color/rq_blue</item>
+        <item name="colorOnSecondary">@color/rq_on_blue</item>
+        <item name="colorTertiary">@color/rq_blue</item>
+
+        <item name="android:colorBackground">@color/rq_surface</item>
+        <item name="colorSurface">@color/rq_surface</item>
+        <item name="colorOnSurface">@color/rq_text_primary</item>
+        <item name="colorSurfaceVariant">@color/rq_surface_variant</item>
+        <item name="colorOnSurfaceVariant">@color/rq_text_secondary</item>
+        <item name="colorOutline">@color/rq_divider</item>
+        <item name="colorOutlineVariant">@color/rq_divider</item>
+
+        <item name="android:windowBackground">@color/rq_scrim</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+    </style>
+
+    <!-- Bottom sheet: rounded top corners, no border. -->
+    <style name="Widget.ResQRoute.BottomSheet" parent="Widget.Material3.BottomSheet">
+        <item name="backgroundTint">@android:color/transparent</item>
+        <item name="android:background">@drawable/rq_sheet_bg</item>
+    </style>
+</resources>

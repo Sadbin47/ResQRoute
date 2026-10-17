@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Water depth: not estimated. An empty container with a question mark: the observer could not say,
+  which is a real answer and is deliberately distinguishable from "no water" (struck through).
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp"
+    android:viewportWidth="24" android:viewportHeight="24">
+    <path android:pathData="M6,3 L18,3 A2,2 0 0 1 20,5 L20,19 A2,2 0 0 1 18,21 L6,21 A2,2 0 0 1 4,19 L4,5 A2,2 0 0 1 6,3 Z"
+        android:strokeColor="#FFFFFFFF" android:strokeWidth="1.6" android:fillColor="#00000000" />
+    <path android:pathData="M12,6.6 c-2.1,0 -3.6,1.4 -3.8,3.4 h2 c0.2,-1 0.9,-1.6 1.8,-1.6 c1,0 1.7,0.7 1.7,1.6 c0,1.6 -2.1,1.5 -2.1,3.8 h2 c0,-1.7 2,-2 2,-3.8 C15.6,8 14,6.6 12,6.6 Z M11,14.6 h2 v2.2 h-2 Z"
+        android:fillColor="#FFFFFFFF" />
+</vector>

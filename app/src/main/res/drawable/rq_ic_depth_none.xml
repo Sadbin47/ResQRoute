@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Water depth: none. Waves present, struck through: the observer looked at the water and there was
+     none, which is a statement rather than an absence of one - so it is drawn, not left blank. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp"
+    android:viewportWidth="24" android:viewportHeight="24">
+    <path android:pathData="M6,3 L18,3 A2,2 0 0 1 20,5 L20,19 A2,2 0 0 1 18,21 L6,21 A2,2 0 0 1 4,19 L4,5 A2,2 0 0 1 6,3 Z"
+        android:strokeColor="#FFFFFFFF" android:strokeWidth="1.6" android:fillColor="#00000000" />
+    <path android:pathData="M4,13 q2,-1.8 4,0 t4,0 t4,0 t4,0"
+        android:strokeColor="#FFFFFFFF" android:strokeWidth="1.6" android:strokeLineCap="round"
+        android:fillColor="#00000000" />
+    <path android:pathData="M5.6,19.6 L18.4,4.4"
+        android:strokeColor="#FFFFFFFF" android:strokeWidth="1.8" android:strokeLineCap="round"
+        android:fillColor="#00000000" />
+</vector>

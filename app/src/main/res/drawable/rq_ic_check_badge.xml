@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The selected badge: a white disc with a blue tick, so it reads on the accent-filled card it sits
+  on. (A blue disc on a blue card would be invisible, which is the opposite of the point.)
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp"
+    android:viewportWidth="24" android:viewportHeight="24">
+    <path android:pathData="M12,12 m-10,0 a10,10 0 1 0 20,0 a10,10 0 1 0 -20,0 Z"
+        android:fillColor="#FFFFFFFF" />
+    <path android:pathData="M7.4,12.3 L10.5,15.4 L16.6,9.3"
+        android:strokeColor="#1A73E8" android:strokeWidth="2.4" android:strokeLineCap="round"
+        android:strokeLineJoin="round" android:fillColor="#00000000" />
+</vector>

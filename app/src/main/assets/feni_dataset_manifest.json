@@ -1,0 +1,46 @@
+{
+  "bbox_S_W_N_E": [
+    22.6881785,
+    91.1995937,
+    23.3363632,
+    91.634685
+  ],
+  "bytes": 5388444,
+  "content_sha256": "b9af7a2e3d43351771bc75d22fa888e7ea76bb59d1bb7f95323ed1117961524e",
+  "counts": {
+    "edges": 78166,
+    "nodes": 34826,
+    "points": 313060,
+    "segments": 39923,
+    "shelters": 91
+  },
+  "dataset_id": "sha256:b9af7a2e3d43351771bc75d22fa888e7ea76bb59d1bb7f95323ed1117961524e",
+  "excluded_segments": 238,
+  "format": "resqroute-dataset",
+  "format_version": 1,
+  "notes": [
+    "shelters are OSM candidate buildings (schools / community centres), not a registered shelter inventory",
+    "blocked-road semantics operate on segment indices: index i is the Phase 0 id S%06d % (i+1)",
+    "the dataset is deterministic; no timestamps are stored"
+  ],
+  "source": {
+    "format_spec": "tools/dataset/DATASET_FORMAT.md",
+    "generator": "tools/dataset/build_dataset.py",
+    "network_sha256": "d8119aeeb1bb11fc391c5e132902ab95ab5867de9827c4034d20211145788a5b"
+  },
+  "spatial_index": {
+    "cell_deg": 0.005,
+    "entries": 59325,
+    "nx": 131,
+    "ny": 89
+  },
+  "topology_version": "feni-road-graph-v0.1-prototype",
+  "validation": {
+    "access_node_max_m": 300.0,
+    "crossings_flagged": 11,
+    "crossings_reviewed_allowlisted": 11,
+    "geometry": "ok",
+    "grade_separated_crossings": 48,
+    "shelters_with_access_node": 91
+  }
+}

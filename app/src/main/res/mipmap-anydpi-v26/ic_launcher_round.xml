@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Adaptive launcher icon (API 26+). The logo is a full-bleed 1254px square whose artwork reaches ~5%
+  from the edge, so it is supplied as a foreground scaled to the 72dp safe zone of the 108dp canvas
+  rather than as a background that the launcher's mask would crop. The backdrop is the logo's own
+  white, so the circle and the artwork meet without a seam.
+-->
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@color/ic_launcher_background" />
+    <!--
+      WebP rather than PNG: the artwork is photographic, and the PNG foregrounds alone were adding
+      ~457 KB to a 9 MB APK - a tax on every install, for one icon. WebP at quality 90 is visually
+      identical at a fraction of the size and is supported by every device this app runs on.
+    -->
+    <foreground android:drawable="@mipmap/ic_launcher_foreground" />
+</adaptive-icon>

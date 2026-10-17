@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  One choice in the report sheet: icon over label, with a check badge when chosen (XPH-93).
+
+  Inflated by `SelectionCard`, which owns every state transition, so this file only needs to
+  describe the arrangement. The card is a MaterialCardView rather than a styled button because the
+  selected state is a *surface* change - fill, border, glow, badge - and a button's own state
+  rendering fights every one of those.
+-->
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:id="@+id/selectionCardBody"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:minHeight="@dimen/rq_card_min_height"
+        android:orientation="vertical"
+        android:paddingStart="6dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="6dp"
+        android:paddingBottom="10dp">
+
+        <ImageView
+            android:id="@+id/selectionCardIcon"
+            android:layout_width="@dimen/rq_choice_icon"
+            android:layout_height="@dimen/rq_choice_icon"
+            android:importantForAccessibility="no"
+            tools:src="@drawable/rq_ic_pass_caution" />
+
+        <TextView
+            android:id="@+id/selectionCardLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:gravity="center"
+            android:textColor="@color/rq_text_primary"
+            android:textSize="12sp"
+            tools:text="knee-deep" />
+    </LinearLayout>
+
+    <!-- White disc, blue tick: it has to read on the accent-filled card it appears on. -->
+    <ImageView
+        android:id="@+id/selectionCardBadge"
+        android:layout_width="@dimen/rq_choice_badge"
+        android:layout_height="@dimen/rq_choice_badge"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="6dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/rq_ic_check_badge"
+        android:visibility="gone"
+        tools:visibility="visible" />
+</merge>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Water depth: "ankle". The container is the water body and the wave line is the level, so the six
+  depth icons differ only in how full they are. That is honest - the app has no sensor and no
+  calibration, so the icon shows an ordinal position, never a measurement - and it reads at a glance
+  at 26dp, which a detailed pictogram would not.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp"
+    android:viewportWidth="24" android:viewportHeight="24">
+    <path android:pathData="M6,3 L18,3 A2,2 0 0 1 20,5 L20,19 A2,2 0 0 1 18,21 L6,21 A2,2 0 0 1 4,19 L4,5 A2,2 0 0 1 6,3 Z"
+        android:strokeColor="#FFFFFFFF" android:strokeWidth="1.6" android:fillColor="#00000000" />
+    <path android:pathData="M4,16 q2,-1.8 4,0 t4,0 t4,0 t4,0 L20,19 A2,2 0 0 1 18,21 L6,21 A2,2 0 0 1 4,19 Z"
+        android:fillColor="#FFFFFFFF" android:fillAlpha="0.45" />
+</vector>

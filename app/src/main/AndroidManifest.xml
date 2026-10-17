@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!--
+      NOTE: android.permission.INTERNET is deliberately NOT declared.
+      The offline shell and routing must need zero network access; omitting the
+      permission is the clearest proof (Phase 1 acceptance criterion 2).
+    -->
+    <!-- osmdroid (Phase 5) must not be able to download tiles or write external
+         storage. Both are removed explicitly so the merged manifest stays
+         network-free and storage-free. The tile provider is constructed with no
+         downloader module, so absence of INTERNET is defence in depth. -->
+    <uses-permission
+        android:name="android.permission.INTERNET"
+        tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        tools:node="remove" />
+
+    <!-- Nearby Connections: legacy (API <= 30) permissions -->
+    <uses-permission
+        android:name="android.permission.BLUETOOTH"
+        android:maxSdkVersion="30" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_ADMIN"
+        android:maxSdkVersion="30" />
+
+    <!--
+      Location, on EVERY API level - and deliberately without a maxSdkVersion.
+
+      It has two independent consumers, which is why the qualification below matters:
+
+        * Nearby Connections on API <= 30 needs FINE location for BLE discovery;
+        * "Report where I am" (XPH-90) needs a fix to snap to a road, on every version.
+
+      Declaring it with `maxSdkVersion="30"` (as this manifest did while only Nearby needed
+      it) means that on Android 12+ the permission is not requested at all, so
+      `checkSelfPermission` is permanently DENIED and the reporting feature is unreachable -
+      not denied by the user, but impossible to grant. That was a real defect, found on a
+      device: the button reported "Location is not allowed" on an emulator whose location
+      permission had been granted by hand.
+
+      COARSE is requested alongside FINE because Android 12+ lets a person choose
+      "approximate": without it, that legitimate choice would produce exactly the same
+      dead end. The suggestion path already treats accuracy as uncertain and asks for
+      confirmation, so a coarse fix is usable - it hedges rather than refuses.
+    -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- Nearby Connections: Android 12+ (API 31+) permissions -->
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_SCAN"
+        android:usesPermissionFlags="neverForLocation"
+        tools:targetApi="s" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+
+    <!-- Nearby Connections: Android 13+ (API 33+) Wi-Fi -->
+    <uses-permission
+        android:name="android.permission.NEARBY_WIFI_DEVICES"
+        android:usesPermissionFlags="neverForLocation"
+        tools:targetApi="tiramisu" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+
+    <application
+        android:name=".app.ResQRouteApplication"
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.ResQRoute"
+        tools:targetApi="31">
+
+        <activity
+            android:name=".app.MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
